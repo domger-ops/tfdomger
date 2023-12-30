@@ -2,14 +2,10 @@
 resource "google_container_cluster" "primary" {
   name                     = "primary"
   location                 = "us-west1-a"
-  # We can't create a cluster with no node pool defined, but we want to only use
-  # separately managed node pools. So we create the smallest possible default
-  # node pool and immediately delete it.
   remove_default_node_pool = true
   initial_node_count       = 1
   network                  = google_compute_network.main.self_link
   subnetwork               = google_compute_subnetwork.private.self_link
-  #logging and monitoring are not free. be careful.
   logging_service          = "logging.googleapis.com/kubernetes"
   monitoring_service       = "monitoring.googleapis.com/kubernetes"
   networking_mode          = "VPC_NATIVE"
@@ -33,7 +29,7 @@ resource "google_container_cluster" "primary" {
   }
 
   workload_identity_config {
-    workload_pool = "domgerops"
+    workload_pool = "domgerops.svc.id.goog"
   }
 
   ip_allocation_policy {
